@@ -18,14 +18,18 @@ class UpdatePermissionsToAppshellV2 extends Migration
     public function up()
     {
         foreach ($this->permissionsToMigrate as $old => $new) {
-            Permission::findByName($old)->update(['name' => $new]);
+            if(Permission::whereName($old)->exists()) {
+                Permission::findByName($old)->update(['name' => $new]);
+            }
         }
     }
 
     public function down()
     {
         foreach ($this->permissionsToMigrate as $old => $new) {
-            Permission::findByName($new)->update(['name' => $old]);
+            if(Permission::whereName($new)->exists()) {
+                Permission::findByName($new)->update(['name' => $old]);
+            }
         }
     }
 }
